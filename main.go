@@ -7,7 +7,8 @@ import (
 	"net/http"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/charmbracelet/lipgloss/list"
+	"github.com/RoastBeefer00/recipes-cli/list"
+    fuzzyfinder "github.com/ktr0731/go-fuzzyfinder"
 )
 
 type Recipe struct {
@@ -52,11 +53,19 @@ var titleStyle = lipgloss.NewStyle().
     PaddingRight(2).
     PaddingTop(1).
     PaddingBottom(1).
-    Width(22).
     Align(lipgloss.Center)
     
 var timeStyle = lipgloss.NewStyle().
     Foreground(lipgloss.Color(text)).
+    Align(lipgloss.Center)
+
+var listStyle = lipgloss.NewStyle().
+    Bold(true).
+    MarginTop(2).
+    PaddingLeft(1).
+    PaddingRight(1).
+    Foreground(lipgloss.Color(crust)).
+    Background(lipgloss.Color(green)).
     Align(lipgloss.Center)
 
 var recipes []Recipe
@@ -80,10 +89,41 @@ func main() {
 		panic(err)
 	}
 
-    recipe := recipes[0]
-    l := list.New(recipe.Ingredients).Enumerator(list.Bullet)
+    idx, err := fuzzyfinder.FindMulti(
+        recipes,
+        func(i int) string {
+            return fmt.Sprintf("%s (%s)", recipes[i].Name, recipes[i].Time)
+        },
+        fuzzyfinder.WithPreviewWindow(func(i, w, h int) string {
+            if i == -1 {
+                return ""
+            }
+            ing := list.New(recipes[i].Ingredients).Enumerator(list.Bullet)
+            s := list.New(recipes[i].Steps).Enumerator(list.Arabic)
+            return fmt.Sprintf("%s \n%s\n\n%s\n%s\n\n%s\n%s",
+                titleStyle.Render(recipes[i].Name),
+                timeStyle.Render(recipes[i].Time),
+                listStyle.Render("Ingredients"),
+                ing,
+                listStyle.Render("Steps"),
+                s,
+                )
+        }))
+    if err != nil {
+        panic(err)
+    }
 
-    fmt.Println(titleStyle.Render(recipe.Name))
-    fmt.Println(timeStyle.Render(recipe.Time))
-    fmt.Println(l)
+    for _, i := range idx {
+        recipe := recipes[i]
+        ing := list.New(recipe.Ingredients).Enumerator(list.Bullet)
+        s := list.New(recipe.Steps).Enumerator(list.Arabic)
+
+        fmt.Println(titleStyle.Render(recipe.Name))
+        fmt.Println(timeStyle.Render(recipe.Time))
+        fmt.Println(listStyle.Render("Ingredients"))
+        fmt.Println(ing)
+        fmt.Println(listStyle.Render("Steps"))
+        fmt.Println(s)
+
+    }
 }
