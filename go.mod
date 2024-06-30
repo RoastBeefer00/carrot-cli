@@ -2,7 +2,10 @@ module github.com/RoastBeefer00/recipes-cli
 
 go 1.22.3
 
-require github.com/charmbracelet/lipgloss v0.11.0
+require (
+	github.com/charmbracelet/lipgloss v0.11.0
+	github.com/ktr0731/go-fuzzyfinder v0.8.0
+)
 
 require (
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
@@ -10,7 +13,6 @@ require (
 	github.com/gdamore/encoding v1.0.0 // indirect
 	github.com/gdamore/tcell/v2 v2.6.0 // indirect
 	github.com/ktr0731/go-ansisgr v0.1.0 // indirect
-	github.com/ktr0731/go-fuzzyfinder v0.8.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
