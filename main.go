@@ -68,6 +68,12 @@ var listStyle = lipgloss.NewStyle().
     Background(lipgloss.Color(green)).
     Align(lipgloss.Center)
 
+var itemStyle = lipgloss.NewStyle().
+    Width(80).PaddingTop(1).PaddingLeft(1)
+    // Margin(1)jjjjjjjjjjjjj
+var numStyle = lipgloss.NewStyle().
+    PaddingTop(1)
+
 var recipes []Recipe
 
 func main() {
@@ -116,7 +122,7 @@ func main() {
     for _, i := range idx {
         recipe := recipes[i]
         ing := list.New(recipe.Ingredients).Enumerator(list.Bullet)
-        s := list.New(recipe.Steps).Enumerator(list.Arabic)
+        s := list.New(recipe.Steps).Enumerator(list.Arabic).ItemStyle(itemStyle).EnumeratorStyle(numStyle)
 
         fmt.Println(titleStyle.Render(recipe.Name))
         fmt.Println(timeStyle.Render(recipe.Time))
