@@ -53,26 +53,29 @@ var titleStyle = lipgloss.NewStyle().
     PaddingRight(2).
     PaddingTop(1).
     PaddingBottom(1).
+    MarginLeft(1).
     Align(lipgloss.Center)
     
 var timeStyle = lipgloss.NewStyle().
     Foreground(lipgloss.Color(text)).
-    Align(lipgloss.Center)
+    Align(lipgloss.Center).MarginLeft(1)
 
 var listStyle = lipgloss.NewStyle().
     Bold(true).
     MarginTop(2).
     PaddingLeft(1).
     PaddingRight(1).
+    MarginLeft(1).
+    MarginBottom(1).
     Foreground(lipgloss.Color(crust)).
     Background(lipgloss.Color(green)).
     Align(lipgloss.Center)
 
 var itemStyle = lipgloss.NewStyle().
-    Width(80).PaddingTop(1).PaddingLeft(1)
-    // Margin(1)jjjjjjjjjjjjj
+    Width(80).PaddingTop(1).MarginLeft(2)
+
 var numStyle = lipgloss.NewStyle().
-    PaddingTop(1)
+    PaddingTop(1).MarginLeft(2)
 
 var recipes []Recipe
 
@@ -105,12 +108,12 @@ func main() {
                 return ""
             }
             ing := list.New(recipes[i].Ingredients).Enumerator(list.Bullet)
-            s := list.New(recipes[i].Steps).Enumerator(list.Arabic)
+            s := list.New(recipes[i].Steps).Enumerator(list.Arabic).ItemStyle(itemStyle).EnumeratorStyle(numStyle)
             return fmt.Sprintf("%s \n%s\n\n%s\n%s\n\n%s\n%s",
                 titleStyle.Render(recipes[i].Name),
                 timeStyle.Render(recipes[i].Time),
                 listStyle.Render("Ingredients"),
-                ing,
+                ing.EnumeratorStyle(lipgloss.NewStyle().MarginLeft(1)).ItemStyle(lipgloss.NewStyle().MarginLeft(1)),
                 listStyle.Render("Steps"),
                 s,
                 )
@@ -127,7 +130,7 @@ func main() {
         fmt.Println(titleStyle.Render(recipe.Name))
         fmt.Println(timeStyle.Render(recipe.Time))
         fmt.Println(listStyle.Render("Ingredients"))
-        fmt.Println(ing)
+        fmt.Println(ing.EnumeratorStyle(lipgloss.NewStyle().MarginLeft(1)).ItemStyle(lipgloss.NewStyle().MarginLeft(1)))
         fmt.Println(listStyle.Render("Steps"))
         fmt.Println(s)
 
